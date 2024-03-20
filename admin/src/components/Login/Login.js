@@ -1,15 +1,60 @@
 // import '../sb-admin-2.min.css';
-import React, { useState, useContext, useEffect } from 'react';
-import { NavLink, useHistory } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginStaff } from '../../store/slice/userSlice';
 const Login = () => {
-    let history = useHistory();
+    const history = useHistory();
 
-    useEffect(() => {
-        axios.get("http://localhost:8080/api/staff/testApi").then(data => {
-            console.log("check data", data);
-        })
-    }, [])
+    const [staffname, setStaffname] = useState('');
+    const [password, setPassword] = useState('');
+
+    const defaultObjInput = {
+        isValidStaffname: true,
+        isValidPassword: true,
+        isValidLogin: true,
+    }
+    const [objCheckInput, setObjCheckInput] = useState(defaultObjInput);
+    const dispatch = useDispatch();
+
+    const { loading, error } = useSelector((state) => state.user)
+
+    const handleStaffname = (data) => {
+        setStaffname(data);
+    };
+
+    const handlePassword = (data) => {
+        setPassword(data);
+    };
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setObjCheckInput(defaultObjInput)
+        if (!staffname) {
+            setObjCheckInput({ ...defaultObjInput, isValidStaffname: false })
+            return;
+        }
+        if (!password) {
+            setObjCheckInput({ ...defaultObjInput, isValidPassword: false })
+            return;
+
+        }
+        let userCredentials = {
+            staffname,
+            password,
+        }
+        const res = await dispatch(loginStaff(userCredentials));
+        if (+res.payload.ErrC !== 0) {
+            setObjCheckInput({ ...defaultObjInput, isValidLogin: false });
+
+            return;
+        }
+        setStaffname('');
+        setPassword('');
+        history.push('/');
+
+        return;
+    }
 
     return (
         <>
@@ -26,7 +71,8 @@ const Login = () => {
                                 <div className="card-body p-0">
                                     {/* <!-- Nested Row within Card Body --> */}
                                     <div className="row">
-                                        <div className="col-lg-6 d-none d-lg-block"></div>
+                                        <div className="col-lg-6 d-none d-lg-block">
+                                        </div>
                                         <div className="col-lg-6">
                                             <div className="p-5">
                                                 <div className="text-center">
@@ -34,13 +80,22 @@ const Login = () => {
                                                 </div>
                                                 <form className="user">
                                                     <div className="form-group">
-                                                        <input type="email" className="form-control form-control-user"
+                                                        <input type="text"
+                                                            className={objCheckInput.isValidStaffname ? "form-control form-control-user" : "form-control form-control-user is-invalid"}
                                                             id="exampleInputEmail" aria-describedby="emailHelp"
-                                                            placeholder="Enter Email Address..." />
+                                                            placeholder="Enter staffname"
+                                                            value={staffname}
+                                                            onChange={(e) => handleStaffname(e.target.value)}
+                                                        />
+                                                        <div className='text-danger' hidden={objCheckInput.isValidStaffname}>Bạn chưa nhập vào staffname</div>
                                                     </div>
                                                     <div className="form-group">
-                                                        <input type="password" className="form-control form-control-user"
-                                                            id="exampleInputPassword" placeholder="Password" />
+                                                        <input type="password"
+                                                            className={objCheckInput.isValidPassword ? "form-control form-control-user" : "form-control form-control-user is-invalid"}
+                                                            id="exampleInputPassword" placeholder="Password" value={password}
+                                                            onChange={(e) => handlePassword(e.target.value)}
+                                                        />
+                                                        <div className='text-danger' hidden={objCheckInput.isValidPassword}>Bạn chưa nhập vào password</div>
                                                     </div>
                                                     <div className="form-group">
                                                         <div className="custom-control custom-checkbox small">
@@ -49,23 +104,14 @@ const Login = () => {
                                                                 Me</label>
                                                         </div>
                                                     </div>
-                                                    <a href="index.html" className="btn btn-primary btn-user btn-block">
-                                                        Login
-                                                    </a>
-                                                    <hr />
-                                                    <a href="index.html" className="btn btn-google btn-user btn-block">
-                                                        <i className="fab fa-google fa-fw"></i> Login with Google
-                                                    </a>
-                                                    <a href="index.html" className="btn btn-facebook btn-user btn-block">
-                                                        <i className="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                                                    </a>
+                                                    <div className='text-danger' hidden={objCheckInput.isValidLogin}>{error}</div>
+                                                    <button className="btn btn-primary btn-user btn-block" type='submit' onClick={(e) => handleLogin(e)}>
+                                                        {loading ? "Loading..." : "Login"}
+                                                    </button>
                                                 </form>
                                                 <hr />
                                                 <div className="text-center">
                                                     <a className="small" href="forgot-password.html">Forgot Password?</a>
-                                                </div>
-                                                <div className="text-center">
-                                                    <a className="small" href="register.html">Create an Account!</a>
                                                 </div>
                                             </div>
                                         </div>
