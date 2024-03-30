@@ -8,11 +8,15 @@ import Products from "../components/Product/Products";
 import ProductDetail from "../components/ProductDetail/ProductDetail";
 import Login from "../components/LoginRegister/Login";
 import Register from "../components/LoginRegister/Register";
+import Cart from "../components/Cart/Cart";
 
 const UserRoute = () => {
     return (
         <>
             <Switch>
+                <Route path="/cart">
+                    <Cart />
+                </Route>
                 <Route path="/product/:name/:id">
                     <ProductDetail />
                 </Route>

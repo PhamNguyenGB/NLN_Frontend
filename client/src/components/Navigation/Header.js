@@ -6,6 +6,7 @@ import { getTypeProduct } from '../../redux/slices/productSlice';
 
 const Header = () => {
     const user = useSelector((state) => state.user.user)
+    const quantity = useSelector((state) => state.cart.quantity)
     const disPatch = useDispatch();
 
     const handleClickNameProduct = async (type) => {
@@ -59,9 +60,13 @@ const Header = () => {
                                         }
                                     </span>
                                     <div className="d-flex flex-column ms-2">
-                                        <span className="qty">
-                                            <i className="fa fa-shopping-cart icon-shopping-cart" aria-hidden="true"></i>
-                                        </span>
+                                        <Link className="qty" to='/cart' style={{ color: "#000" }}>
+                                            <i className="fa fa-shopping-cart icon-shopping-cart position-relative" aria-hidden="true">
+                                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: "12px" }}>
+                                                    {quantity !== 0 ? quantity : ''}
+                                                </span>
+                                            </i>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

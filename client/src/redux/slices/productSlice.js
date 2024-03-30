@@ -17,6 +17,23 @@ export const getTypeProduct = createAsyncThunk(
     }
 )
 
+export const getProductByID = createAsyncThunk(
+    'product/id',
+    async (id) => {
+        const request = await axios.get(`http://localhost:8080/api/products/oneProduct/${id}`);
+        return request.data;
+    }
+)
+
+export const getSimilarProduct = createAsyncThunk(
+    'product/similar',
+    async ({ type, idProduct }) => {
+        const request = await axios.get(`http://localhost:8080/api/products/similar/${type}/${idProduct}`);
+        return request.data;
+
+    }
+)
+
 
 const productSlice = createSlice({
     name: "product",
@@ -24,6 +41,7 @@ const productSlice = createSlice({
         loading: false,
         products: null,
         error: null,
+        similarProducts: null,
     },
 
     extraReducers: (builder) => {
@@ -41,7 +59,7 @@ const productSlice = createSlice({
             .addCase(fetAllProducts.rejected, (state, action) => {
                 state.loading = false;
                 state.products = null;
-                state.error = action.payloa.data.Mess;
+                state.error = action.payload.data.Mess;
             })
 
             //Get type of product
@@ -51,18 +69,50 @@ const productSlice = createSlice({
                 state.error = null;
             })
             .addCase(getTypeProduct.fulfilled, (state, action) => {
-                console.log("chcek acc", action.payload);
-                state.loading = true;
+                state.loading = false;
                 state.products = action.payload;;
-                state.error = null;
+                state.error = action.payload.Mess;
             })
-            .addCase(getTypeProduct.rejected, (state, acction) => {
+            .addCase(getTypeProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.products = null;
+                state.error = action.payload.Mess;
+            })
+
+            //Get product by id
+            .addCase(getProductByID.pending, (state) => {
                 state.loading = true;
                 state.products = null;
-                state.error = acction.payload.Mess;
+                state.error = null;
+            })
+            .addCase(getProductByID.fulfilled, (state, action) => {
+                console.log("check action", action)
+                state.loading = false;
+                state.products = action.payload;
+                state.error = action.payload.Mess;
+            })
+            .addCase(getProductByID.rejected, (state, action) => {
+                state.loading = false;
+                state.products = null;
+                state.error = action.payload.Mess;
             })
 
-
+            //Get similar products
+            .addCase(getSimilarProduct.pending, (state) => {
+                state.loading = true;
+                state.similarProducts = null;
+                state.error = null;
+            })
+            .addCase(getSimilarProduct.fulfilled, (state, action) => {
+                state.loading = true;
+                state.similarProducts = action.payload;
+                state.error = action.payload.Mess;
+            })
+            .addCase(getSimilarProduct.rejected, (state, action) => {
+                state.loading = true;
+                state.similarProducts = action.payload;
+                state.error = action.payload.Mess;
+            })
     },
 })
 
