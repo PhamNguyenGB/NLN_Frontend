@@ -45,7 +45,7 @@ function Statistic() {
 
                         {/* <!-- Order --> */}
                         <li className="nav-item active">
-                            <NavLink className="nav-link" to="/product">
+                            <NavLink className="nav-link" to="/order">
                                 <i class="fa fa-th" aria-hidden="true"></i>
                                 <span>Orders manager</span></NavLink>
                         </li>

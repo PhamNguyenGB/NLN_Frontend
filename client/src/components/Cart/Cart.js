@@ -2,7 +2,7 @@ import './Cart.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { increaseQuantity, decreaseQuantity, clearCart, deleteProductCart } from "../../redux/slices/cartSlice";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { addOrder } from '../../redux/slices/orderSlice';
 import { addOrderDetail } from '../../redux/slices/orderDetailSlice';
 
@@ -21,6 +21,7 @@ const Cart = () => {
     const [totalAmout, setTotalAmout] = useState(amount);
     const [shipping, setShipping] = useState();
     const [error, setError] = useState(true);
+    const [orderSuccess, setOrderSuccess] = useState(true);
 
     const handleDeleteProduct = async (idProduct) => {
         await disPatch(deleteProductCart(idProduct));
@@ -69,10 +70,16 @@ const Cart = () => {
                 setError(true);
             }, 5000);
             return;
+        } else {
+            await disPatch(addOrder({ userId: user.id, address, phone, shipping, totalAmout }));
+            await disPatch(addOrderDetail({ userId: user.id, products: cart }));
+            await disPatch(clearCart());
+            setTotalAmout(0);
+            setOrderSuccess(false);
+            setTimeout(() => {
+                setOrderSuccess(true);
+            }, 5000);
         }
-        await disPatch(addOrder({ userId: user.id, address, phone, shipping, totalAmout }));
-        await disPatch(addOrderDetail({ userId: user.id, products: cart }));
-        await disPatch(clearCart());
     }
 
     return (
@@ -124,7 +131,7 @@ const Cart = () => {
                                                                 <div className="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                                                                     <h6 className="mb-0" style={{ fontSize: '16px' }}>{item.price * item.quantity}</h6>
                                                                 </div>
-                                                                <div className="col-md-1 col-lg-1 col-xl-1 text-end" onClick={() => handleDeleteProduct(item.id)} >
+                                                                <div role='button' className=" col-md-1 col-lg-1 col-xl-1 text-end" onClick={() => handleDeleteProduct(item.id)} >
                                                                     <i className="fa fa-times" aria-hidden="true"></i>
                                                                 </div>
                                                             </div>
@@ -189,6 +196,8 @@ const Cart = () => {
                                                     <h5 className="text-uppercase">Tổng số tiền</h5>
                                                     <h5>{totalAmout}</h5>
                                                 </div>
+
+                                                <div className='text-success' hidden={orderSuccess}>Đặt hàng thành công</div>
 
                                                 <button type="button" className="btn btn-primary btn-block btn-lg h1"
                                                     onClick={() => handleClickOrder(cart)}

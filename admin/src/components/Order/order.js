@@ -1,52 +1,24 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { fetAllOrder } from '../../store/slice/orderSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from "react";
-import { fetAllProducts } from '../../store/slice/productSlice';
-import ModalProduct from './modalProduct';
-import ModalDeleteProduct from './modalDeleteProduct';
-const Product = () => {
+import { getOrderDetail } from '../../store/slice/orderDetailSlice';
+
+
+const Order = () => {
 
     const dispatch = useDispatch();
 
-    const loading = useSelector((state) => state.products.loading);
-    const products = useSelector((state) => state.products.products);
-    const error = useSelector((state) => state.products.error);
-
-    const [isShowModalProduct, setIsShowModalProduct] = useState(false);
-    const [actionModalProduct, setActionModalProduct] = useState("CREATE");
-    const [dataModelProduct, setDataModelProduct] = useState({});
-
-    // Delete modal 
-    const [isShowModalDelete, setIsShowModalDelete] = useState(false);
-    const [dataModel, setDataModel] = useState({});
+    const orders = useSelector((state) => state.order.orders);
+    const staff = useSelector((state) => state.user.staff);
 
     useEffect(() => {
-        dispatch(fetAllProducts());
-    }, [])
+        dispatch(fetAllOrder(staff.access_token));
+    }, []);
 
-    const onHideModalProduct = async () => {
-        setIsShowModalProduct(false);
-        setDataModelProduct({});
-        await dispatch(fetAllProducts());
-    };
-
-    const handleUpdateProduct = (product) => {
-        console.log(product);
-        setActionModalProduct("UPDATE");
-        setDataModelProduct(product);
-        setIsShowModalProduct(true);
-    };
-
-    const handleCloseModalDelete = () => {
-        setIsShowModalDelete(false);
-        setDataModel({});
+    const GetOrderDetail = async (orderId, shipping) => {
+        await dispatch(getOrderDetail({ orderId, shipping }));
     }
-
-    const handleDeleteProduct = (product) => {
-        setIsShowModalDelete(true);
-        console.log(product);
-        setDataModel(product);
-    };
 
     return (
         <>
@@ -191,82 +163,66 @@ const Product = () => {
                             <div className="container-fluid">
 
                                 {/* <!-- Page Heading --> */}
-                                <h1 className="h3 mb-2 text-gray-800">QUẢN LÍ SẢN PHẨM</h1>
-                                <div className="row">
-                                    <div className="col-10"></div>
-                                    <button className="col-2 m-3 btn btn-primary" style={{ width: "200px" }}
-                                        onClick={() => {
-                                            setIsShowModalProduct(true);
-                                            setActionModalProduct("CREATE");
-                                        }}
-                                    >+Add new product</button>
-                                </div>
+                                <h1 className="h3 mb-2 text-gray-800">QUẢN LÍ ĐƠN HÀNG</h1>
 
                                 {/* <!-- DataTales Example --> */}
-                                <div className="card shadow mb-4">
+                                <div className="card shadow mb-4 mt-5">
                                     <div className="card-header py-3">
-                                        <h6 className="m-0 font-weight-bold text-primary">Sản phẩm</h6>
+                                        <h6 className="m-0 font-weight-bold text-primary">Đơn hàng</h6>
                                     </div>
                                     <div className="card-body">
                                         <div className="table-responsive">
                                             <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID</th>
-                                                        <th>Image</th>
-                                                        <th>Name</th>
-                                                        <th>Type</th>
-                                                        <th>Price</th>
-                                                        <th></th>
+                                                        <th>Name's order</th>
+                                                        <th>Address</th>
+                                                        <th>Phone</th>
+                                                        <th>Ship price</th>
+                                                        <th>Total Cost</th>
+                                                        <th>Status</th>
+                                                        <th>Detail</th>
 
                                                     </tr>
                                                 </thead>
                                                 <tfoot>
                                                     <tr>
-                                                        <th>ID</th>
-                                                        <th>Image</th>
-                                                        <th>Name</th>
-                                                        <th>Type</th>
-                                                        <th>Price</th>
-
+                                                        <th>Name's order</th>
+                                                        <th>Address</th>
+                                                        <th>Phone</th>
+                                                        <th>Ship price</th>
+                                                        <th>Total Cost</th>
+                                                        <th>Status</th>
+                                                        <th>Detail</th>
                                                     </tr>
                                                 </tfoot>
                                                 <tbody>
-                                                    {loading === false && error === null && products ?
+                                                    {orders ?
                                                         <>
-                                                            {products.data.Data.map((item, index) => {
+                                                            {orders.map((item, index) => {
                                                                 return (
-                                                                    <tr key={`product-${index}`}>
-                                                                        <td>{item.id}</td>
+                                                                    <tr key={`order-${index}`}>
+                                                                        <td>{item.User?.username}</td>
                                                                         <td>
-                                                                            <img
-                                                                                src={item.image} className="img-thumbnail image-product" alt="..." style={{ width: "100px" }} />
+                                                                            {item.address}
                                                                         </td>
-                                                                        <td>{item.name}</td>
-                                                                        <td>{item.type}</td>
-                                                                        <td>{item.price}</td>
-                                                                        <td style={{ width: "200px" }}>
-                                                                            <span>
-                                                                                <button className=" btn btn-success ml-5" onClick={() => handleUpdateProduct(item)}>
-                                                                                    <i className="fa fa-solid fa-pencil"></i>
-                                                                                </button>
-                                                                                <button className=" btn btn-danger ml-3" onClick={() => handleDeleteProduct(item)}>
-                                                                                    <i className="fa fa-solid fa-trash"></i>
-                                                                                </button>
-                                                                            </span>
+                                                                        <td>{item.phone}</td>
+                                                                        <td>{item.pay}</td>
+                                                                        <td>{item.totalCost}</td>
+                                                                        <td >
+                                                                            {item.status}
                                                                         </td>
-
+                                                                        <td>
+                                                                            <NavLink to={`/orderDetail/${item.id}`} onClick={() => GetOrderDetail(item.id, item.pay)}> Xem chi tiết</NavLink>
+                                                                        </td>
                                                                     </tr>
-
                                                                 )
                                                             })}
                                                         </>
                                                         :
-                                                        <>
-                                                            <tr>
-                                                                <td>data isLoading...</td>
-                                                            </tr>
-                                                        </>
+                                                        <tr>
+                                                            <td>...isLoading</td>
+                                                        </tr>
                                                     }
                                                 </tbody>
                                             </table>
@@ -324,37 +280,8 @@ const Product = () => {
                     </div>
                 </div>
             </div >
-
-            {isShowModalProduct === true ?
-                <>
-                    <ModalProduct
-                        isShowModalProduct={isShowModalProduct}
-                        onHide={onHideModalProduct}
-                        action={actionModalProduct}
-                        dataModelProduct={dataModelProduct}
-
-                    />
-                </>
-                :
-                <></>
-            }
-
-            {isShowModalDelete === true ?
-                <>
-                    <ModalDeleteProduct
-                        isShowModalDelete={isShowModalDelete}
-                        handleCloseModalDelete={handleCloseModalDelete}
-                        dataModel={dataModel}
-
-                    />
-                </>
-                :
-                <></>
-            }
-
         </>
-
-    );
+    )
 }
 
-export default Product;
+export default Order
