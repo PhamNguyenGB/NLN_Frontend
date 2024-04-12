@@ -1,16 +1,41 @@
 import './Header.scss';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTypeProduct } from '../../redux/slices/productSlice';
+import { getTypeProduct, searchProducts } from '../../redux/slices/productSlice';
+import Dropdown from 'react-bootstrap/Dropdown';
+import { logout } from '../../redux/slices/userSlice';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const Header = () => {
-    const user = useSelector((state) => state.user.user)
-    const quantity = useSelector((state) => state.cart.quantity)
+    const user = useSelector((state) => state.user.user);
+    const quantity = useSelector((state) => state.cart.quantity);
+    const [search, setSearch] = useState('');
     const disPatch = useDispatch();
+    const history = useHistory();
 
     const handleClickNameProduct = async (type) => {
         await disPatch(getTypeProduct(type));
+    }
+
+    const handleLogout = () => {
+        disPatch(logout(user.access_token));
+    };
+
+    const handleClickYourOrder = async () => {
+        history.push('/order')
+    }
+
+    const handleSearch = async () => {
+        disPatch(searchProducts({ name: search }));
+        history.push(`/search/${search}`);
+    };
+
+    const handlePressEnter = (event) => {
+        if (event.keyCode === 13 && event.key === 'Enter') {
+            event.preventDefault();
+            handleSearch();
+        }
     }
 
     useEffect(() => {
@@ -34,24 +59,39 @@ const Header = () => {
                                 <img className="d-none d-md-flex" src="https://i.imgur.com/R8QhGhk.png" width="100" />
                             </div>
                             <div className="col-md-4">
-                                <div className="d-flex form-inputs">
-                                    <input className="form-control search-header" type="text" placeholder="Search any product..." />
-                                    <i className="fa fa-search icon-search" aria-hidden="true"></i>
-                                </div>
+                                <form className="d-flex form-inputs">
+                                    <input
+                                        onChange={(e) => setSearch(e.target.value)} value={search}
+                                        className="form-control search-header" type="text" placeholder="Tìm kiếm sản phẩm..."
+                                        onKeyDown={(event) => handlePressEnter(event)}
+                                    />
+                                    <i onClick={handleSearch} className="fa fa-search icon-search" aria-hidden="true"></i>
+                                </form>
                             </div>
                             <div className='col-md-1'>
                                 <i className="fa fa-phone text-primary" style={{ fontSize: '14px' }} aria-hidden="true"></i>
                                 <h3 className='text-primary'>02877770049</h3>
                             </div>
 
-                            <div className="col-md-2">
+                            <div className="col-md-3">
                                 <div className="d-flex d-none d-md-flex flex-row align-items-center">
                                     <span className="login-res">
                                         {user ?
-                                            <div style={{ fontSize: '16px' }}>
-                                                {user.username}
-                                                <i className="fa fa-user" aria-hidden="true" style={{ marginLeft: '10px' }}></i>
-                                            </div>
+                                            <>
+                                                <Dropdown>
+                                                    <Dropdown.Toggle variant="light" id="dropdown-basic" style={{ fontSize: '16px' }}>
+                                                        {user.username}
+                                                        <i className="fa fa-user" variant="success" id="dropdown-basic" style={{ marginLeft: '10px' }}></i>
+                                                    </Dropdown.Toggle>
+
+                                                    <Dropdown.Menu style={{ width: '200px' }}>
+                                                        <Dropdown.Item className='item-drop'>Thông tin</Dropdown.Item>
+                                                        <Dropdown.Item className='item-drop' onClick={() => handleClickYourOrder()}>Đơn hàng của bạn</Dropdown.Item>
+                                                        <hr />
+                                                        <Dropdown.Item className='item-drop' onClick={() => handleLogout()}>Đăng xuất</Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+                                            </>
                                             :
                                             <>
                                                 <Link to='/login' className='login' >Đăng nhập /</Link>

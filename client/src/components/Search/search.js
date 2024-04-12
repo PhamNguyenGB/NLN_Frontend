@@ -1,18 +1,18 @@
 import { Link, useParams, useHistory } from "react-router-dom";
 import { useEffect } from "react";
-import './Products.scss';
+import './search.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductByID, getSimilarProduct, productsFilterPrice } from "../../redux/slices/productSlice";
 import { addCart } from "../../redux/slices/cartSlice";
 
-const Products = () => {
-    const { type } = useParams();
+const Search = () => {
+    const { name } = useParams();
     const products = useSelector((state) => state.product.products?.Data)
 
     const history = useHistory();
     const disPatch = useDispatch();
 
-    const handleClickCart = async (idProduct) => {
+    const handleClickCart = async (type, idProduct) => {
         history.push(`/product/${type}/${idProduct}`);
         await disPatch(getProductByID(idProduct));
         await disPatch(getSimilarProduct({ type, idProduct }));
@@ -23,7 +23,7 @@ const Products = () => {
     };
 
     const handleFillterPrice = async (priceFilter) => {
-        await disPatch(productsFilterPrice({ type, price: priceFilter }));
+        await disPatch(productsFilterPrice({ type: 'All', price: priceFilter }));
     };
 
     useEffect(() => { }, [products]);
@@ -33,9 +33,7 @@ const Products = () => {
             <div className="container mt-3 body-content">
                 <Link to='/' className="home ">Trang chủ</Link>
                 <span style={{ fontSize: '16px', color: '#ccc' }}>/</span>
-                <span className="type" >{type}</span>
-                <div className={`img-${type}`}>
-                </div>
+                <span className="type" >{name}</span>
                 <div className="mt-4 row">
                     <div className="row col-9">
 
@@ -44,8 +42,8 @@ const Products = () => {
                                 {products?.map((item, index) => {
                                     return (
                                         <div className="card col-3 m-3" style={{ width: "30rem" }} key={`product-${index}`}>
-                                            <img role="button" src={item.image} className="card-img-top" alt="..." onClick={() => handleClickCart(item.id)} />
-                                            <div className="card-body" onClick={() => handleClickCart(item.id)}>
+                                            <img role="button" src={item.image} className="card-img-top" alt="..." onClick={() => handleClickCart(item.type, item.id)} />
+                                            <div className="card-body" onClick={() => handleClickCart(item.type, item.id)}>
                                                 <h5 className="card-title" role="button" style={{ fontSize: "2rem" }}>{item.name}</h5>
                                                 <p role="button" className="card-text text-primary">{item.price} đ</p>
                                             </div>
@@ -99,4 +97,4 @@ const Products = () => {
     )
 };
 
-export default Products;
+export default Search;

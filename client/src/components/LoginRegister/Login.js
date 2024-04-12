@@ -79,7 +79,9 @@ const Login = () => {
                                         <div className="row gy-3 overflow-hidden">
                                             <div className="col-12">
                                                 <div className="form-floating mb-3 h5">
-                                                    <input type="text" className="form-control" style={{ fontSize: '18px' }} placeholder="username" required value={username}
+                                                    <input type="text"
+                                                        className="form-control" style={{ height: '45px', fontSize: '16px' }}
+                                                        placeholder="username" required value={username}
                                                         onChange={(event) => handleUsername(event.target.value)}
                                                     />
                                                     <label for="username" className="form-label">Tên đăng nhập</label>
@@ -87,7 +89,9 @@ const Login = () => {
                                             </div>
                                             <div className="col-12">
                                                 <div className="form-floating mb-3 h5">
-                                                    <input type="password" className="form-control" name="password" id="password" value={password} placeholder="Password" required
+                                                    <input type="password"
+                                                        className="form-control" style={{ height: '45px', fontSize: '16px' }} name="password"
+                                                        id="password" value={password} placeholder="Password" required
                                                         onChange={(event) => handlePassword(event.target.value)}
                                                     />
                                                     <label for="password" className="form-label">Mật khẩu</label>

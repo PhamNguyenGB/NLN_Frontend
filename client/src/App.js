@@ -1,4 +1,5 @@
 import Header from "./components/Navigation/Header";
+import Footer from "./components/Navigation/Footer";
 import UserRoute from "./routes/userRoute";
 import {
   BrowserRouter as Router
@@ -11,9 +12,12 @@ function App() {
         <header className="App-header">
           <Header />
         </header>
-        <div className="App-body">
+        <div className="App-body" style={{ marginBottom: '100px' }}>
           <UserRoute />
         </div>
+        <footer>
+          <Footer />
+        </footer>
       </div>
     </Router>
   );

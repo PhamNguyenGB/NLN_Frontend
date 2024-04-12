@@ -16,8 +16,8 @@ const Order = () => {
         dispatch(fetAllOrder(staff.access_token));
     }, []);
 
-    const GetOrderDetail = async (orderId, shipping) => {
-        await dispatch(getOrderDetail({ orderId, shipping }));
+    const GetOrderDetail = async (orderId, shipping, status) => {
+        await dispatch(getOrderDetail({ orderId, shipping, status }));
     }
 
     return (
@@ -175,6 +175,7 @@ const Order = () => {
                                             <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                                                 <thead>
                                                     <tr>
+                                                        <th>Order ID</th>
                                                         <th>Name's order</th>
                                                         <th>Address</th>
                                                         <th>Phone</th>
@@ -187,6 +188,7 @@ const Order = () => {
                                                 </thead>
                                                 <tfoot>
                                                     <tr>
+                                                        <th>Order ID</th>
                                                         <th>Name's order</th>
                                                         <th>Address</th>
                                                         <th>Phone</th>
@@ -202,6 +204,7 @@ const Order = () => {
                                                             {orders.map((item, index) => {
                                                                 return (
                                                                     <tr key={`order-${index}`}>
+                                                                        <td>1222528743{item.id}</td>
                                                                         <td>{item.User?.username}</td>
                                                                         <td>
                                                                             {item.address}
@@ -213,7 +216,7 @@ const Order = () => {
                                                                             {item.status}
                                                                         </td>
                                                                         <td>
-                                                                            <NavLink to={`/orderDetail/${item.id}`} onClick={() => GetOrderDetail(item.id, item.pay)}> Xem chi tiết</NavLink>
+                                                                            <NavLink to={`/orderDetail/${item.id}`} onClick={() => GetOrderDetail(item.id, item.pay, item.status)}> Xem chi tiết</NavLink>
                                                                         </td>
                                                                     </tr>
                                                                 )
@@ -284,4 +287,4 @@ const Order = () => {
     )
 }
 
-export default Order
+export default Order;

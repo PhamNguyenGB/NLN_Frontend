@@ -21,6 +21,19 @@ export const register = createAsyncThunk(
     }
 )
 
+export const logout = createAsyncThunk(
+    'user/logout',
+    async (access_token) => {
+        const request = await axios.post('http://localhost:8080/api/user/logout', {}, {
+            headers: {
+                token: `Bearer ${access_token}`,
+            },
+        });
+        localStorage.removeItem('user');
+        return request.data;
+    }
+)
+
 const userSlice = createSlice({
     name: 'user',
     initialState: {
@@ -64,6 +77,23 @@ const userSlice = createSlice({
                 state.user = null;
                 state.error = action.payload.Mess;
             })
+
+            //logout
+            .addCase(logout.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(logout.fulfilled, (state, action) => {
+                state.loading = true;
+                state.error = action.payload?.Mess;
+                state.user = null;
+            })
+
+            .addCase(logout.rejected, (state, action) => {
+                state.loading = true;
+                state.error = action.payload?.Mess;
+            })
+
     }
 });
 

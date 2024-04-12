@@ -14,6 +14,19 @@ export const fetAllOrder = createAsyncThunk(
     }
 )
 
+export const updateStatusOrder = createAsyncThunk(
+    'order/updateStatus',
+    async ({ data, access_token }) => {
+        let request = await axios.put('http://localhost:8080/api/order/updateStatus', data, {
+            headers: {
+                token: `Bearer ${access_token}`,
+                "Content-Type": "application/json",
+            }
+        })
+        return request.data;
+    },
+)
+
 
 const orderSlice = createSlice({
     name: 'order',
@@ -25,6 +38,7 @@ const orderSlice = createSlice({
 
     extraReducers: (builder) => {
         builder
+            // get all orders
             .addCase(fetAllOrder.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -32,13 +46,27 @@ const orderSlice = createSlice({
             })
             .addCase(fetAllOrder.fulfilled, (state, action) => {
                 state.loading = false;
-                state.error = action.payload.Mess;
-                state.orders = action.payload.Data;
+                state.error = action.payload?.Mess;
+                state.orders = action.payload?.Data;
             })
             .addCase(fetAllOrder.rejected, (state, action) => {
                 state.loading = true;
-                state.error = action.payload.Mess;
+                state.error = action.payload?.Mess;
                 state.orders = null;
+            })
+
+            //update order status
+            .addCase(updateStatusOrder.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateStatusOrder.fulfilled, (state, action) => {
+                state.loading = true;
+                state.error = action.payload?.Mess;
+            })
+            .addCase(updateStatusOrder.rejected, (state, action) => {
+                state.loading = true;
+                state.error = action.payload?.Mess;
             })
     }
 });

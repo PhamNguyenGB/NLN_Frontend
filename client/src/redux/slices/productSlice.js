@@ -34,12 +34,30 @@ export const getSimilarProduct = createAsyncThunk(
     }
 )
 
+export const productsFilterPrice = createAsyncThunk(
+    'product/filters/price',
+    async ({ type, price }) => {
+        console.log(type, price);
+        const request = await axios.get(`http://localhost:8080/api/products/filter/${type}/${price}`);
+        return request.data;
+    }
+)
+
+export const searchProducts = createAsyncThunk(
+    'product/search',
+    async ({ name }) => {
+        const request = await axios.get(`http://localhost:8080/api/products/search/${name}`);
+        return request.data;
+    }
+)
+
 
 const productSlice = createSlice({
     name: "product",
     initialState: {
         loading: false,
         products: null,
+        product: null,
         error: null,
         similarProducts: null,
     },
@@ -82,18 +100,17 @@ const productSlice = createSlice({
             //Get product by id
             .addCase(getProductByID.pending, (state) => {
                 state.loading = true;
-                state.products = null;
+                state.product = null;
                 state.error = null;
             })
             .addCase(getProductByID.fulfilled, (state, action) => {
-                console.log("check action", action)
                 state.loading = false;
-                state.products = action.payload;
+                state.product = action.payload;
                 state.error = action.payload.Mess;
             })
             .addCase(getProductByID.rejected, (state, action) => {
                 state.loading = false;
-                state.products = null;
+                state.product = null;
                 state.error = action.payload.Mess;
             })
 
@@ -112,6 +129,37 @@ const productSlice = createSlice({
                 state.loading = true;
                 state.similarProducts = action.payload;
                 state.error = action.payload.Mess;
+            })
+
+            // product filters price
+            .addCase(productsFilterPrice.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(productsFilterPrice.fulfilled, (state, action) => {
+                console.log("check action", action.payload);
+                state.loading = false;
+                state.products = action.payload;
+                state.error = null;
+            })
+            .addCase(productsFilterPrice.rejected, (state, action) => {
+                state.loading = false;
+                state.error = 'Lỗi khi lọc sản phẩm';
+            })
+
+            // search products
+            .addCase(searchProducts.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(searchProducts.fulfilled, (state, action) => {
+                state.loading = false;
+                state.products = action.payload;
+                state.error = action.payload?.Mess;
+            })
+            .addCase(searchProducts.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.Mess;
             })
     },
 })

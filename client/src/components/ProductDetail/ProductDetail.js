@@ -7,7 +7,7 @@ import { addCart } from "../../redux/slices/cartSlice";
 
 
 const ProductDetail = () => {
-    const product = useSelector((state) => state.product.products);
+    const product = useSelector((state) => state.product.product);
     const similarProducts = useSelector((state) => state.product.similarProducts);
     const [quantity, setQuantity] = useState(1);
 
@@ -37,6 +37,10 @@ const ProductDetail = () => {
         await disPatch(addCart({ product, quantity: quantity }));
     };
 
+    const goBack = () => {
+        history.goBack();
+    };
+
 
 
     return (
@@ -45,6 +49,8 @@ const ProductDetail = () => {
                 <>
                     <div className='container'>
                         <Link to='/' className="home ">Trang chủ</Link>
+                        <span style={{ fontSize: '16px', color: '#ccc' }}>/ </span>
+                        <span onClick={goBack} className='home' role='button' style={{ fontSize: '16px' }}> Trở về</span>
                         <span style={{ fontSize: '16px', color: '#ccc' }}>/</span>
                         <span className="type" >{product.Data.name}</span>
                     </div>

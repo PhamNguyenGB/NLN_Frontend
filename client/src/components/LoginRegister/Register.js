@@ -67,12 +67,12 @@ const Register = () => {
                     history.push('/login');
                 }, 1000)
             } else {
-                if (response.payload.Mess === 'Tên tài khoản đã tồn tại') {
+                if (response.payload?.Mess === 'Tên tài khoản đã tồn tại') {
                     setObjCheckInput({ ...defaulValidInput, isValidUsername: false });
-                    setMessError(response.payload.Mess);
+                    setMessError(response.payload?.Mess);
                 } else if (response.payload.Mess === 'Số điện thoại đã được sử dụng') {
                     setObjCheckInput({ ...defaulValidInput, isValidPhone: false });
-                    setMessError(response.payload.Mess);
+                    setMessError(response.payload?.Mess);
                 }
             }
         }

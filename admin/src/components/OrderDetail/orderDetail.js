@@ -1,19 +1,49 @@
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory, useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import './orderDetail.scss';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { updateStatusOrder } from '../../store/slice/orderSlice';
+import { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 
 const OrderDetail = () => {
     const history = useHistory();
+    const dispatch = useDispatch();
+
+    const { id } = useParams();
 
     const products_OD = useSelector((state) => state.orderDetail.products);
     const shipping = useSelector((state) => state.orderDetail.shipping);
+    const status = useSelector((state) => state.orderDetail.status);
     const totalAmout = useSelector((state) => state.orderDetail.totalAmout);
+    const staff = useSelector((state) => state.user.staff);
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+
 
     const handleGoBack = () => {
         history.goBack();
     };
+
+    const handleConfirmOrder = (action) => {
+        const data = { orderId: id, status: action }
+        dispatch(updateStatusOrder({ data, access_token: staff.access_token }));
+        history.goBack();
+    };
+
+    const handleCancelOrder = (action) => {
+        const data = { orderId: id, status: action }
+        dispatch(updateStatusOrder({ data, access_token: staff.access_token }));
+        history.goBack();
+    };
+
+
 
 
     return (
@@ -33,12 +63,13 @@ const OrderDetail = () => {
                                     <div className="col-lg-10 col-xl-8">
                                         <div className="card" style={{ borderRadius: "10px" }}>
                                             <div className="card-header px-4 py-5">
-                                                <NavLink to='#' style={{ color: '#a8729a', textDecoration: 'none' }} onClick={() => handleGoBack()}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Go back</NavLink>
+                                                <NavLink to='#' style={{ color: '#a8729a', textDecoration: 'none' }}
+                                                    onClick={() => handleGoBack()}
+                                                > <i className="fa fa-arrow-left" aria-hidden="true"></i> Trở về</NavLink>
                                             </div>
                                             <div className="card-body p-4">
                                                 <div className="d-flex justify-content-between align-items-center mb-4">
-                                                    <p className="lead fw-normal mb-0" style={{ color: "#a8729a" }}>Receipt</p>
-                                                    <p className="small text-muted mb-0">Receipt Voucher : 1KAU9-84UIL</p>
+                                                    <p className="lead fw-normal mb-0" style={{ color: "#a8729a" }}>Biên lai</p>
                                                 </div>
                                                 {products_OD ?
                                                     <>
@@ -96,18 +127,28 @@ const OrderDetail = () => {
                                                 </div>
                                                 <div className="d-flex justify-content-between pt-2">
                                                     <p className="fw-bold mb-0"></p>
-                                                    <p className="text-muted mb-0"><span className="fw-bold me-4">Total</span>{totalAmout}</p>
+                                                    <p className="text-muted mb-0"><span className="fw-bold me-4">Tiền hàng</span>{totalAmout}</p>
                                                 </div>
 
                                                 <div className="d-flex justify-content-between mb-5">
                                                     <p className="fw-bold mb-0"></p>
-                                                    <p className="text-muted mb-0"><span className="fw-bold me-4">Delivery Charges</span> {shipping}</p>
+                                                    <p className="text-muted mb-0"><span className="fw-bold me-4">Phí vận chuyển</span> {shipping}</p>
                                                 </div>
                                             </div>
                                             <div className="card-footer border-0 px-4 py-5"
                                                 style={{ backgroundColor: "#a8729a", borderBottomLeftRadius: "10px", borderBottomRightRadius: "10px" }}>
-                                                <h5 className="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Total
-                                                    paid: <span className="h2 mb-0 ms-2">{shipping + totalAmout}</span></h5>
+                                                <h5 className="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Tổng
+                                                    tiền: <span className="h2 mb-0 ms-2">{shipping + totalAmout}</span></h5>
+                                                {status === 'Chưa xác nhận' ?
+                                                    <div className='d-flex justify-content-end mt-3'>
+                                                        <button className='btn btn-success m-2 mb-0' onClick={() => handleConfirmOrder('Đã xác nhận')}>Xác nhận đơn</button>
+                                                        <button className='btn btn-danger m-2 mb-0' onClick={handleShow}>Hủy đơn</button>
+                                                    </div>
+                                                    :
+                                                    <div className='d-flex justify-content-end mt-3 text-white'>
+                                                        {status}
+                                                    </div>
+                                                }
                                             </div>
                                         </div>
                                     </div>
@@ -126,25 +167,26 @@ const OrderDetail = () => {
                     <i className="fas fa-angle-up"></i>
                 </a>
 
-                {/* <!-- Logout Modal--> */}
-                <div className="modal fade" id="logoutModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                                <button className="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                            <div className="modal-footer">
-                                <button className="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                <a className="btn btn-primary" href="login.html">Logout</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {show === true ?
+                    <>
+                        <Modal show={show} onHide={handleClose}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Xác nhận hủy đơn hàng</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>Bạn chắc chắn muốn hủy đơn?</Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleClose}>
+                                    Đóng
+                                </Button>
+                                <Button variant="danger" onClick={() => handleCancelOrder('Đã hủy đơn')}>
+                                    Hủy đơn
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+                    </>
+                    :
+                    <></>
+                }
             </div >
         </>
     )

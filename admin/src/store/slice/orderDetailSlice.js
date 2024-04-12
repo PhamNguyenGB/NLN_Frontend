@@ -3,12 +3,11 @@ import axios from "axios";
 
 export const getOrderDetail = createAsyncThunk(
     'orderDetail/fetAll',
-    async ({ orderId, shipping }) => {
+    async ({ orderId, shipping, status }) => {
         let request = await axios.get(`http://localhost:8080/api/Details/getOrderDetail/${orderId}`);
-        return { ...request.data, shipping };
+        return { ...request.data, shipping, status };
     }
 )
-
 
 const orderDetailSlice = createSlice({
     name: 'orderDetail',
@@ -18,6 +17,7 @@ const orderDetailSlice = createSlice({
         shipping: 0,
         error: null,
         totalAmout: 0,
+        status: '',
     },
 
     extraReducers: (builder) => {
@@ -30,9 +30,10 @@ const orderDetailSlice = createSlice({
             .addCase(getOrderDetail.fulfilled, (state, action) => {
                 state.totalAmout = 0;
                 state.loading = false;
-                state.error = action.payload.Mess;
-                state.shipping = action.payload.shipping;
-                state.products = action.payload.Data;
+                state.error = action.payload?.Mess;
+                state.shipping = action.payload?.shipping;
+                state.products = action.payload?.Data;
+                state.status = action.payload?.status;
                 action.payload.Data?.map((item) => {
                     if (item.price) {
                         state.totalAmout += item.price * item.quantity;
@@ -41,7 +42,7 @@ const orderDetailSlice = createSlice({
             })
             .addCase(getOrderDetail.rejected, (state, action) => {
                 state.loading = true;
-                state.error = action.payload.Mess;
+                state.error = action.payload?.Mess;
                 state.products = null;
             })
     }

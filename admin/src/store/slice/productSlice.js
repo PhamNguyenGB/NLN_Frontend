@@ -25,7 +25,6 @@ export const createProduct = createAsyncThunk(
 export const deleteProduct = createAsyncThunk(
     'staff/product/delete',
     async ({ idProduct, access_token }) => {
-        console.log(idProduct, access_token);
         const request = await axios.delete(`http://localhost:8080/api/products/delete/${idProduct}`, {
             headers: {
                 token: `Bearer ${access_token}`,
@@ -39,7 +38,6 @@ export const deleteProduct = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
     'staff/product/update',
     async ({ dataproduct, access_token }) => {
-        console.log(access_token);
         const request = await axios.put('http://localhost:8080/api/products/update', dataproduct, {
             headers: {
                 token: `Bearer ${access_token}`,

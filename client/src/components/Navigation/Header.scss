@@ -72,6 +72,20 @@ body {}
         color: #4e4ffa;
 
     }
+
+    .item-drop {
+        font-size: 18px;
+        padding: 5px;
+        transition: all 0.2s linear;
+    }
+
+    .item-drop:hover {
+        background-color: #ccc;
+        color: #000;
+        font-weight: 0 !important;
+        font-size: 16px !important;
+        padding: 10px;
+    }
 }
 
 .qty {
