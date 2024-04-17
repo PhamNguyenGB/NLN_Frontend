@@ -175,6 +175,7 @@ const statisticSlice = createSlice({
             .addCase(getDataStatisticMoneyMonth.fulfilled, (state, action) => {
                 state.loading = false;
                 state.statisticMoney = action.payload;
+                state.totalMoney = 0;
                 action.payload.data.map((item) => {
                     state.totalMoney += item.totalCost;
                 })
@@ -192,6 +193,7 @@ const statisticSlice = createSlice({
             .addCase(getDataStatisticMoneyYear.fulfilled, (state, action) => {
                 state.loading = false;
                 state.statisticMoney = action.payload;
+                state.totalMoney = 0;
                 action.payload.data.map((item) => {
                     state.totalMoney += item.totalCost;
                 })
