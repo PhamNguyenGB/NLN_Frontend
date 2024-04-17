@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { getOrderById } from '../../redux/slices/orderSlice';
 import { NavLink, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import numeral from 'numeral';
 
 const Order = () => {
 
@@ -27,7 +28,9 @@ const Order = () => {
         return Array.isArray(arr) && arr.length === 0;
     }
 
-
+    const formatNumber = (number) => {
+        return numeral(number).format('0,0');
+    }
 
 
     return (
@@ -64,7 +67,7 @@ const Order = () => {
                                                                         <p>Tổng giá tiền của sản phẩm</p>
                                                                     </div>
                                                                     <div className="col-md-4 col-lg-3">
-                                                                        <p>{item.totalCost - item.pay}</p>
+                                                                        <p>{formatNumber(item.totalCost - item.pay)} đ</p>
                                                                     </div>
                                                                 </div>
                                                                 <div className="row">
@@ -72,7 +75,7 @@ const Order = () => {
                                                                         <p className="mb-0">Shipping</p>
                                                                     </div>
                                                                     <div className="col-md-4 col-lg-3">
-                                                                        <p className="mb-0">{item.pay}</p>
+                                                                        <p className="mb-0">{formatNumber(item.pay)} đ</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -83,7 +86,7 @@ const Order = () => {
                                                                         <p className="mb-0 fw-bold lead text-dark">Tổng tiền</p>
                                                                     </div>
                                                                     <div className="col-md-4 col-lg-3">
-                                                                        <p className="mb-0 fw-bold lead text-dark" >{item.totalCost}</p>
+                                                                        <p className="mb-0 fw-bold lead text-dark" >{formatNumber(item.totalCost)} đ</p>
                                                                     </div>
                                                                 </div>
                                                             </div>

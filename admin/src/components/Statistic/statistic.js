@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from "react";
 import StatisticUserTable from './statisticUsersTable';
 import StatisticMoneyTable from './statisticMoneyTable';
-
+import numeral from 'numeral';
 
 function Statistic() {
     const currentMonth = new Date().getMonth() + 1;
@@ -49,6 +49,10 @@ function Statistic() {
     const moneyMonth = useSelector((state) => state.statistic.moneyMonth?.Data);
     const moneyYear = useSelector((state) => state.statistic.moneyYear?.Data);
     const totalQuantity = useSelector((state) => state.statistic.totalQuantity?.totalQuantity);
+
+    const formatNumber = (number) => {
+        return numeral(number).format('0,0');
+    }
 
     return (
         <>
@@ -202,14 +206,14 @@ function Statistic() {
                                 <div className="row">
 
                                     {/* <!-- Earnings (Monthly) Card Example --> */}
-                                    <div className="col-xl-3 col-md-6 mb-4" onClick={() => handleClickShowTableMoney('month')}>
+                                    <div className="col-xl-3 col-md-6 mb-4" onClick={() => handleClickShowTableMoney('month')} role='button'>
                                         <div className="card border-left-primary shadow h-100 py-2">
                                             <div className="card-body">
                                                 <div className="row no-gutters align-items-center">
                                                     <div className="col mr-2">
                                                         <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                             Doanh thu (tháng {currentMonth})</div>
-                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{moneyMonth}</div>
+                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{formatNumber(moneyMonth)} đ</div>
                                                     </div>
                                                     <div className="col-auto">
                                                         <i className="fas fa-calendar fa-2x text-gray-300"></i>
@@ -220,14 +224,14 @@ function Statistic() {
                                     </div>
 
                                     {/* <!-- Earnings (Monthly) Card Example --> */}
-                                    <div className="col-xl-3 col-md-6 mb-4" onClick={() => handleClickShowTableMoney('year')}>
+                                    <div className="col-xl-3 col-md-6 mb-4" onClick={() => handleClickShowTableMoney('year')} role='button'>
                                         <div className="card border-left-success shadow h-100 py-2">
                                             <div className="card-body">
                                                 <div className="row no-gutters align-items-center">
                                                     <div className="col mr-2">
                                                         <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                             Doanh thu (năm {currentYear})</div>
-                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{moneyYear}</div>
+                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{formatNumber(moneyYear)} đ</div>
                                                     </div>
                                                     <div className="col-auto">
                                                         <i className="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -245,7 +249,7 @@ function Statistic() {
                                                     <div className="col mr-2">
                                                         <div className="text-xs font-weight-bold text-info text-uppercase mb-1">Tổng số người dùng
                                                         </div>
-                                                        <div className="h5 mb-0 mr-3 font-weight-bold text-gray-800">{users}</div>
+                                                        <div className="h5 mb-0 mr-3 font-weight-bold text-gray-800">{formatNumber(users)}</div>
                                                     </div>
                                                     <div className="col-auto">
                                                         <i className="fa fa-user fa-2x text-gray-300" aria-hidden="true"></i>
@@ -263,7 +267,7 @@ function Statistic() {
                                                     <div className="col mr-2">
                                                         <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                             Tổng sản phẩm đã bán</div>
-                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{totalQuantity}</div>
+                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">{formatNumber(totalQuantity)}</div>
                                                     </div>
                                                     <div className="col-auto">
                                                         <i className="fa fa-car fa-2x text-gray-300" aria-hidden="true"></i>

@@ -5,7 +5,7 @@ import { increaseQuantity, decreaseQuantity, clearCart, deleteProductCart } from
 import { useEffect, useState } from 'react';
 import { addOrder } from '../../redux/slices/orderSlice';
 import { addOrderDetail } from '../../redux/slices/orderDetailSlice';
-
+import numeral from 'numeral';
 
 const Cart = () => {
 
@@ -82,6 +82,10 @@ const Cart = () => {
         }
     }
 
+    const formatNumber = (number) => {
+        return numeral(number).format('0,0');
+    }
+
     return (
         <>
             <section className="h-100 h-custom" style={{ backgroundColor: "#d2c9ff", fontSize: '16px' }}>
@@ -129,7 +133,7 @@ const Cart = () => {
                                                                     </button>
                                                                 </div>
                                                                 <div className="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                                                    <h6 className="mb-0" style={{ fontSize: '16px' }}>{item.price * item.quantity}</h6>
+                                                                    <h6 className="mb-0" style={{ fontSize: '16px' }}>{formatNumber(item.price * item.quantity)} đ</h6>
                                                                 </div>
                                                                 <div role='button' className=" col-md-1 col-lg-1 col-xl-1 text-end" onClick={() => handleDeleteProduct(item.id)} >
                                                                     <i className="fa fa-times" aria-hidden="true"></i>
@@ -153,7 +157,7 @@ const Cart = () => {
 
                                                 <div className="d-flex justify-content-between mb-4">
                                                     <h5 className="text-uppercase">Tổng sản phẩm {quantityFromCart}</h5>
-                                                    <h5>{amount}</h5>
+                                                    <h5>{formatNumber(amount)} đ</h5>
                                                 </div>
 
                                                 <h5 className="text-uppercase mb-3">Phí vận chuyển</h5>
@@ -165,7 +169,7 @@ const Cart = () => {
                                                         <option value="2">Giao hàng nhanh</option>
                                                         <option value="3">Giao hàng siêu tốc</option>
                                                     </select>
-                                                    <h5>{shipping}</h5>
+                                                    <h5>{formatNumber(shipping)} đ</h5>
                                                 </div>
 
                                                 <h5 className="text-uppercase mb-3">Địa chỉ giao hàng</h5>
@@ -194,7 +198,7 @@ const Cart = () => {
 
                                                 <div className="d-flex justify-content-between mb-5">
                                                     <h5 className="text-uppercase">Tổng số tiền</h5>
-                                                    <h5>{totalAmout}</h5>
+                                                    <h5>{formatNumber(totalAmout)} đ</h5>
                                                 </div>
 
                                                 <div className='text-success' hidden={orderSuccess}>Đặt hàng thành công</div>

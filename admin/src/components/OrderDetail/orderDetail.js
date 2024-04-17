@@ -6,7 +6,7 @@ import { updateStatusOrder } from '../../store/slice/orderSlice';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
+import numeral from 'numeral';
 
 const OrderDetail = () => {
     const history = useHistory();
@@ -43,7 +43,9 @@ const OrderDetail = () => {
         history.goBack();
     };
 
-
+    const formatNumber = (number) => {
+        return numeral(number).format('0,0');
+    }
 
 
     return (
@@ -86,7 +88,7 @@ const OrderDetail = () => {
                                                                                 <p className="text-muted mb-0">{item.Product.name}</p>
                                                                             </div>
                                                                             <div className="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                                                <p className="text-muted mb-0 small">Price: {item.price}</p>
+                                                                                <p className="text-muted mb-0 small">Price: {formatNumber(item.price)} đ</p>
                                                                             </div>
                                                                             <div className="col-md-2 text-center d-flex justify-content-center align-items-center">
                                                                                 <p className="text-muted mb-0 small">Type: {item.Product?.type}</p>
@@ -95,7 +97,7 @@ const OrderDetail = () => {
                                                                                 <p className="text-muted mb-0 small">Qty: {item.quantity}</p>
                                                                             </div>
                                                                             <div className="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                                                <p className="text-muted mb-0 small">{item.price * item.quantity}</p>
+                                                                                <p className="text-muted mb-0 small">{formatNumber(item.price * item.quantity)} đ</p>
                                                                             </div>
                                                                         </div>
                                                                         <hr className="mb-4" style={{ backgroundColor: "#e0e0e0", opacity: "1" }} />
@@ -127,18 +129,18 @@ const OrderDetail = () => {
                                                 </div>
                                                 <div className="d-flex justify-content-between pt-2">
                                                     <p className="fw-bold mb-0"></p>
-                                                    <p className="text-muted mb-0"><span className="fw-bold me-4">Tiền hàng</span>{totalAmout}</p>
+                                                    <p className="text-muted mb-0"><span className="fw-bold me-4">Tiền hàng</span>{formatNumber(totalAmout)} đ</p>
                                                 </div>
 
                                                 <div className="d-flex justify-content-between mb-5">
                                                     <p className="fw-bold mb-0"></p>
-                                                    <p className="text-muted mb-0"><span className="fw-bold me-4">Phí vận chuyển</span> {shipping}</p>
+                                                    <p className="text-muted mb-0"><span className="fw-bold me-4">Phí vận chuyển</span> {formatNumber(shipping)} đ</p>
                                                 </div>
                                             </div>
                                             <div className="card-footer border-0 px-4 py-5"
                                                 style={{ backgroundColor: "#a8729a", borderBottomLeftRadius: "10px", borderBottomRightRadius: "10px" }}>
                                                 <h5 className="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Tổng
-                                                    tiền: <span className="h2 mb-0 ms-2">{shipping + totalAmout}</span></h5>
+                                                    tiền: <span className="h2 mb-0 ms-2">{formatNumber(shipping + totalAmout)} vnđ</span></h5>
                                                 {status === 'Chưa xác nhận' ?
                                                     <div className='d-flex justify-content-end mt-3'>
                                                         <button className='btn btn-success m-2 mb-0' onClick={() => handleConfirmOrder('Đã xác nhận')}>Xác nhận đơn</button>

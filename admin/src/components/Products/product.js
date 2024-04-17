@@ -3,7 +3,9 @@ import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { fetAllProducts } from '../../store/slice/productSlice';
 import ModalProduct from './modalProduct';
+import numeral from 'numeral';
 import ModalDeleteProduct from './modalDeleteProduct';
+
 const Product = () => {
 
     const dispatch = useDispatch();
@@ -47,6 +49,10 @@ const Product = () => {
         console.log(product);
         setDataModel(product);
     };
+
+    const formatNumber = (number) => {
+        return numeral(number).format('0,0');
+    }
 
     return (
         <>
@@ -244,7 +250,7 @@ const Product = () => {
                                                                         </td>
                                                                         <td>{item.name}</td>
                                                                         <td>{item.type}</td>
-                                                                        <td>{item.price}</td>
+                                                                        <td>{formatNumber(item.price)} đ</td>
                                                                         <td style={{ width: "200px" }}>
                                                                             <span>
                                                                                 <button className=" btn btn-success ml-5" onClick={() => handleUpdateProduct(item)}>

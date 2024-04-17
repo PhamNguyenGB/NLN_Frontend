@@ -2,7 +2,7 @@ import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min
 import { getOrderDetail } from '../../redux/slices/orderDetailSlice';
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import numeral from 'numeral';
 
 const OrderDetail = (props) => {
     const history = useHistory();
@@ -12,6 +12,10 @@ const OrderDetail = (props) => {
 
     const GoBack = () => {
         history.goBack();
+    }
+
+    const formatNumber = (number) => {
+        return numeral(number).format('0,0');
     }
 
     useEffect(() => {
@@ -43,7 +47,7 @@ const OrderDetail = (props) => {
                                                 <div className="flex-fill">
                                                     <h4 className="bold">{item.Product.name}</h4>
                                                     <h4 className="text-muted"> SL: {item.quantity}</h4>
-                                                    <h4 className="mb-3"> {item.price} đ</h4>
+                                                    <h4 className="mb-3"> {formatNumber(item.price)} đ</h4>
                                                     <h4>Loại xe: {item.Product.type}</h4>
 
                                                 </div>

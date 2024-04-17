@@ -4,6 +4,7 @@ import './Products.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductByID, getSimilarProduct, productsFilterPrice } from "../../redux/slices/productSlice";
 import { addCart } from "../../redux/slices/cartSlice";
+import numeral from 'numeral';
 
 const Products = () => {
     const { type } = useParams();
@@ -26,6 +27,10 @@ const Products = () => {
         await disPatch(productsFilterPrice({ type, price: priceFilter }));
     };
 
+    const formatNumber = (number) => {
+        return numeral(number).format('0,0');
+    }
+
     useEffect(() => { }, [products]);
 
     return (
@@ -47,7 +52,7 @@ const Products = () => {
                                             <img role="button" src={item.image} className="card-img-top" alt="..." onClick={() => handleClickCart(item.id)} />
                                             <div className="card-body" onClick={() => handleClickCart(item.id)}>
                                                 <h5 className="card-title" role="button" style={{ fontSize: "2rem" }}>{item.name}</h5>
-                                                <p role="button" className="card-text text-primary">{item.price} đ</p>
+                                                <p role="button" className="card-text text-primary">{formatNumber(item.price)} đ</p>
                                             </div>
                                             <button className="btn btn-primary add-cart" style={{ fontSize: "2rem" }} onClick={() => handleClickAddCart(item)}> Thêm vào giỏ</button>
                                         </div>

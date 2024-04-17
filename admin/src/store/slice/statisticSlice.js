@@ -100,6 +100,7 @@ const statisticSlice = createSlice({
         users: null,
         totalQuantity: null,
         statisticMoney: null,
+        totalMoney: 0,
     },
     extraReducers: (builder) => {
         builder
@@ -169,26 +170,31 @@ const statisticSlice = createSlice({
             .addCase(getDataStatisticMoneyMonth.pending, (state) => {
                 state.loading = true;
                 state.statisticMoney = null;
+                state.totalMoney = 0;
             })
             .addCase(getDataStatisticMoneyMonth.fulfilled, (state, action) => {
                 state.loading = false;
-                console.log(action.payload);
                 state.statisticMoney = action.payload;
+                action.payload.data.map((item) => {
+                    state.totalMoney += item.totalCost;
+                })
             })
             .addCase(getDataStatisticMoneyMonth.rejected, (state, action) => {
                 state.loading = false;
             })
 
             //get data money year
-            //get data money month
             .addCase(getDataStatisticMoneyYear.pending, (state) => {
                 state.loading = true;
                 state.statisticMoney = null;
+                state.totalMoney = 0;
             })
             .addCase(getDataStatisticMoneyYear.fulfilled, (state, action) => {
-                console.log(action.payload);
                 state.loading = false;
                 state.statisticMoney = action.payload;
+                action.payload.data.map((item) => {
+                    state.totalMoney += item.totalCost;
+                })
             })
             .addCase(getDataStatisticMoneyYear.rejected, (state, action) => {
                 state.loading = false;

@@ -3,7 +3,7 @@ import { fetAllOrder } from '../../store/slice/orderSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from "react";
 import { getOrderDetail } from '../../store/slice/orderDetailSlice';
-
+import numeral from 'numeral';
 
 const Order = () => {
 
@@ -18,6 +18,10 @@ const Order = () => {
 
     const GetOrderDetail = async (orderId, shipping, status) => {
         await dispatch(getOrderDetail({ orderId, shipping, status }));
+    }
+
+    const formatNumber = (number) => {
+        return numeral(number).format('0,0');
     }
 
     return (
@@ -210,8 +214,8 @@ const Order = () => {
                                                                             {item.address}
                                                                         </td>
                                                                         <td>{item.phone}</td>
-                                                                        <td>{item.pay}</td>
-                                                                        <td>{item.totalCost}</td>
+                                                                        <td>{formatNumber(item.pay)} đ</td>
+                                                                        <td>{formatNumber(item.totalCost)} đ</td>
                                                                         <td >
                                                                             {item.status}
                                                                         </td>

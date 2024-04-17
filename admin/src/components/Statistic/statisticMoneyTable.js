@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from "react";
 import { getDataStatisticMoneyYear, getDataStatisticMoneyMonth } from '../../store/slice/statisticSlice';
 import moment from 'moment';
+import numeral from 'numeral';
 
 const StatisticMoneyTable = (props) => {
     const currentMonth = new Date().getMonth() + 1;
@@ -42,7 +43,11 @@ const StatisticMoneyTable = (props) => {
     }, [month, year, action]);
 
     const statisticMoney = useSelector((state) => state.statistic.statisticMoney?.data);
+    const totalMoney = useSelector((state) => state.statistic.totalMoney);
 
+    const formatNumber = (number) => {
+        return numeral(number).format('0,0');
+    }
 
     return (
         <>
@@ -100,10 +105,11 @@ const StatisticMoneyTable = (props) => {
                                         <div className='col-7'>
 
                                         </div>
-                                        <div className='col-3'>
-                                            <h6 className={action === 'month' ? "text-primary" : "text-success"}>
+                                        <div className='col-3 row'>
+                                            <h6 className={action === 'month' ? "text-primary col-8" : "text-success col-8"}>
                                                 Tổng doanh thu {action === 'month' ? `tháng ${month}` : `năm ${year}`}:
                                             </h6>
+                                            <h6 className='col-4 text-dark'>{formatNumber(totalMoney)} đ</h6>
                                         </div>
                                     </div>
                                     <div className="card-body">
@@ -129,9 +135,9 @@ const StatisticMoneyTable = (props) => {
                                                 </tfoot>
                                                 <tbody>
                                                     {statisticMoney?.length === 0 ?
-                                                        <>
-                                                            Không có dữ liệu
-                                                        </>
+                                                        <tr>
+                                                            <td>Không có dữ liệu</td>
+                                                        </tr>
                                                         :
                                                         <>
                                                             {statisticMoney?.map((item, index) => {
@@ -142,7 +148,7 @@ const StatisticMoneyTable = (props) => {
                                                                             {item.User.username}
                                                                         </td>
                                                                         <td>1222528743{item.id}</td>
-                                                                        <td>{item.totalCost}</td>
+                                                                        <td>{formatNumber(item.totalCost)} đ</td>
                                                                         <td>{formattedDate(item.createdAt)}</td>
                                                                     </tr>
                                                                 )

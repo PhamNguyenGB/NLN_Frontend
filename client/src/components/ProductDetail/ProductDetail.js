@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { getProductByID, getSimilarProduct } from '../../redux/slices/productSlice';
 import { addCart } from "../../redux/slices/cartSlice";
-
+import numeral from 'numeral';
 
 const ProductDetail = () => {
     const product = useSelector((state) => state.product.product);
@@ -41,6 +41,9 @@ const ProductDetail = () => {
         history.goBack();
     };
 
+    const formatNumber = (number) => {
+        return numeral(number).format('0,0');
+    }
 
 
     return (
@@ -85,7 +88,7 @@ const ProductDetail = () => {
                                         </div>
 
                                         <div className="mb-3">
-                                            <span className="h5" style={{ fontSize: '24px', color: '#ff1414' }}>{product.Data.price}</span>
+                                            <span className="h5" style={{ fontSize: '24px', color: '#ff1414' }}>{formatNumber(product.Data.price)} đ</span>
                                         </div>
 
                                         <p style={{ fontSize: '16px' }}>
@@ -127,9 +130,12 @@ const ProductDetail = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <button className="btn btn-warning shadow-0 font-20 m-2"> Buy now </button>
-                                        <button className="btn btn-primary shadow-0 font-20 m-2" onClick={() => handleClickAddCart(product.Data)}> <i className="me-1 fa fa-shopping-basket"></i> Add to cart </button>
-                                        <button className="btn btn-light border border-secondary py-2 icon-hover px-3 font-20 m-2"> <i className="me-1 fa fa-heart fa-lg"></i> Save </button>
+                                        <button className="btn btn-warning shadow-0 font-20 m-2" onClick={() => handleClickAddCart(product.Data)}>
+                                            <Link to='/cart' style={{ textDecoration: 'none', color: '#000' }}>Mua ngay</Link>
+                                        </button>
+                                        <button className="btn btn-primary shadow-0 font-20 m-2" onClick={() => handleClickAddCart(product.Data)}>
+                                            <i className="me-1 fa fa-shopping-basket"></i> Add to cart
+                                        </button>
                                     </div>
                                 </main>
                             </div>

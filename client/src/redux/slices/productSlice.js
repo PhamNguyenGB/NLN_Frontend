@@ -77,7 +77,7 @@ const productSlice = createSlice({
             .addCase(fetAllProducts.rejected, (state, action) => {
                 state.loading = false;
                 state.products = null;
-                state.error = action.payload.data.Mess;
+                state.error = action.payload.data?.Mess;
             })
 
             //Get type of product
@@ -89,12 +89,12 @@ const productSlice = createSlice({
             .addCase(getTypeProduct.fulfilled, (state, action) => {
                 state.loading = false;
                 state.products = action.payload;;
-                state.error = action.payload.Mess;
+                state.error = action.payload?.Mess;
             })
             .addCase(getTypeProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.products = null;
-                state.error = action.payload.Mess;
+                state.error = action.payload?.Mess;
             })
 
             //Get product by id
@@ -106,12 +106,12 @@ const productSlice = createSlice({
             .addCase(getProductByID.fulfilled, (state, action) => {
                 state.loading = false;
                 state.product = action.payload;
-                state.error = action.payload.Mess;
+                state.error = action.payload?.Mess;
             })
             .addCase(getProductByID.rejected, (state, action) => {
                 state.loading = false;
                 state.product = null;
-                state.error = action.payload.Mess;
+                state.error = action.payload?.Mess;
             })
 
             //Get similar products
@@ -123,12 +123,12 @@ const productSlice = createSlice({
             .addCase(getSimilarProduct.fulfilled, (state, action) => {
                 state.loading = true;
                 state.similarProducts = action.payload;
-                state.error = action.payload.Mess;
+                state.error = action.payload?.Mess;
             })
             .addCase(getSimilarProduct.rejected, (state, action) => {
                 state.loading = true;
                 state.similarProducts = action.payload;
-                state.error = action.payload.Mess;
+                state.error = action.payload?.Mess;
             })
 
             // product filters price

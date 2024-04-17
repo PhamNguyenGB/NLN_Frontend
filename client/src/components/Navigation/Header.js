@@ -56,7 +56,7 @@ const Header = () => {
 
                             </div>
                             <div className="col-md-2">
-                                <img className="d-none d-md-flex" src="https://i.imgur.com/R8QhGhk.png" width="100" />
+                                <Link to='/' className='logo'></Link>
                             </div>
                             <div className="col-md-4">
                                 <form className="d-flex form-inputs">
